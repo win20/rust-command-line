@@ -7,19 +7,22 @@ use std::path::Path;
 // -E    show $ at the end of each line
 // -s    suppress repeated blank lines
 
-pub fn cat(files: Vec<String>) {
+pub fn cat(files: Vec<String>, option: &String) {
     let lines = concat_files(files);
-    for (idx, line) in lines.iter().enumerate() {
-        println!("{} {}", idx, line);
-    }
-}
 
-fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
-where
-    P: AsRef<Path>,
-{
-    let file = File::open(filename)?;
-    Ok(io::BufReader::new(file).lines())
+    match option.as_str() {
+        "-n" => {
+            for (idx, line) in lines.iter().enumerate() {
+                println!("{} {}", idx, line);
+            }
+        }
+        "" => {
+            for line in lines {
+                println!("{}", line);
+            }
+        }
+        _ => println!("Error: option not recognized"),
+    }
 }
 
 fn concat_files(files: Vec<String>) -> Vec<String> {
@@ -37,4 +40,12 @@ fn concat_files(files: Vec<String>) -> Vec<String> {
         }
     }
     concat_lines
+}
+
+fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
+where
+    P: AsRef<Path>,
+{
+    let file = File::open(filename)?;
+    Ok(io::BufReader::new(file).lines())
 }

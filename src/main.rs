@@ -9,7 +9,13 @@ fn main() {
 
     match args[0].as_str() {
         "echo" => echo(args[1..].to_vec()),
-        "cat" => cat(args[1..].to_vec()),
+        "cat" => {
+            if args[1].starts_with("-") {
+                cat(args[2..].to_vec(), &args[1]);
+            } else {
+                cat(args[1..].to_vec(), &String::from(""));
+            }
+        }
         _ => println!("Error: Command not recognized"),
     }
 }
