@@ -1,5 +1,6 @@
 use std::fs::File;
-use std::io::{self, BufRead};
+use std::io::{self, BufRead, Error};
+use std::num::ParseIntError;
 use std::path::Path;
 
 // [[ Options to add ]]
@@ -7,21 +8,49 @@ use std::path::Path;
 // -E    show $ at the end of each line
 // -s    suppress repeated blank lines
 
-pub fn cat(files: Vec<String>, option: &String) {
-    let lines = concat_files(files);
+#[derive(Debug)]
+pub enum Option {
+    ShowLineNumber,
+    ShowEndOfLine,
+    SuppressRepeatedBlankLines,
+    NoOption,
+}
 
-    match option.as_str() {
-        "-n" => {
-            for (idx, line) in lines.iter().enumerate() {
-                println!("{} {}", idx, line);
-            }
+impl Option {
+    fn as_option(option_str: &str) -> Result<Option, &str> {
+        match option_str {
+            "-n" => Ok(Option::ShowLineNumber),
+            "-E" => Ok(Option::ShowEndOfLine),
+            "-s" => Ok(Option::SuppressRepeatedBlankLines),
+            "" => Ok(Option::NoOption),
+            _ => Err("Error: unknown option provided"),
         }
-        "" => {
-            for line in lines {
-                println!("{}", line);
+    }
+}
+
+pub fn cat(args: Vec<String>) {
+    if args.len() == 0 {
+        panic!("Please provide at least one argument");
+    }
+
+    if args[0].starts_with("-") {
+        let lines = concat_files(args[1..].to_vec());
+        let option = Option::as_option(args[0].as_str()).unwrap();
+
+        match option {
+            Option::ShowLineNumber => {
+                for (idx, line) in lines.iter().enumerate() {
+                    println!("{} {}", idx, line);
+                }
             }
+            _ => {}
         }
-        _ => println!("Error: option not recognized"),
+    } else {
+        let lines = concat_files(args[0..].to_vec());
+
+        for line in lines {
+            println!("{}", line);
+        }
     }
 }
 
