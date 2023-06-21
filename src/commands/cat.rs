@@ -8,17 +8,9 @@ use std::path::Path;
 // -s    suppress repeated blank lines
 
 pub fn cat(files: Vec<String>) {
-    for file in files {
-        match read_lines(file) {
-            Ok(lines) => {
-                for line in lines {
-                    if let Ok(l) = line {
-                        println!("{}", l);
-                    }
-                }
-            }
-            Err(e) => println!("Error: {}", e),
-        }
+    let lines = concat_files(files);
+    for (idx, line) in lines.iter().enumerate() {
+        println!("{} {}", idx, line);
     }
 }
 
@@ -30,8 +22,19 @@ where
     Ok(io::BufReader::new(file).lines())
 }
 
-// pub fn cat_line_numbers(file) -> String {
-//     // format!("{} {}", line_number, line_text)
-//
-//     println!()
-// }
+fn concat_files(files: Vec<String>) -> Vec<String> {
+    let mut concat_lines: Vec<String> = Vec::from([]);
+    for file in files {
+        match read_lines(file) {
+            Ok(lines) => {
+                for line in lines {
+                    if let Ok(l) = line {
+                        concat_lines.push(l);
+                    }
+                }
+            }
+            Err(e) => println!("Error: {}", e),
+        }
+    }
+    concat_lines
+}
