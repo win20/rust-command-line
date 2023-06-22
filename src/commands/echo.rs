@@ -1,9 +1,3 @@
-pub fn echo(text: Vec<String>) {
-    println!("{}", text.join(" "));
-}
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_outputs_input_strings() {}
+pub fn echo(args: Vec<String>) {
+    println!("{}", args.join(" "));
 }
