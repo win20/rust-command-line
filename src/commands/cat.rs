@@ -52,13 +52,6 @@ pub fn cat(args: Vec<String>) {
                 let mut new_output = Vec::from([]);
 
                 for line in lines {
-                    // if is_previous_line_blank && line == "" {
-                    //     println!("blank");
-                    // } else {
-                    //     is_previous_line_blank = false;
-                    //     new_output.push(line);
-                    // }
-
                     if !(is_previous_line_blank && line == "") {
                         is_previous_line_blank = false;
                         new_output.push(line.clone());
