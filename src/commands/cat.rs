@@ -1,6 +1,5 @@
 use std::fs::File;
-use std::io::{self, BufRead, Error};
-use std::num::ParseIntError;
+use std::io::{self, BufRead};
 use std::path::Path;
 
 // [[ Options to add ]]
@@ -41,6 +40,37 @@ pub fn cat(args: Vec<String>) {
             Option::ShowLineNumber => {
                 for (idx, line) in lines.iter().enumerate() {
                     println!("{} {}", idx, line);
+                }
+            }
+            Option::ShowEndOfLine => {
+                for line in lines {
+                    println!("{}$", line);
+                }
+            }
+            Option::SuppressRepeatedBlankLines => {
+                let mut is_previous_line_blank = false;
+                let mut new_output = Vec::from([]);
+
+                for line in lines {
+                    // if is_previous_line_blank && line == "" {
+                    //     println!("blank");
+                    // } else {
+                    //     is_previous_line_blank = false;
+                    //     new_output.push(line);
+                    // }
+
+                    if !(is_previous_line_blank && line == "") {
+                        is_previous_line_blank = false;
+                        new_output.push(line.clone());
+                    }
+
+                    if line == "" {
+                        is_previous_line_blank = true;
+                    }
+                }
+
+                for line in new_output {
+                    println!("{}", line);
                 }
             }
             _ => {}
