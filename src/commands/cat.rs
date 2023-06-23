@@ -2,11 +2,6 @@ use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
 
-// [[ Options to add ]]
-// -n    show line numbers
-// -E    show $ at the end of each line
-// -s    suppress repeated blank lines
-
 #[derive(Debug)]
 pub enum Option {
     ShowLineNumber,
