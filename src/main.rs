@@ -15,7 +15,7 @@ fn main() -> io::Result<()> {
         "echo" => Ok(echo(args[1..].to_vec())),
         "cat" => Ok(cat(args[1..].to_vec())),
         "ls" => Ok(ls(args[1..].to_vec())),
-        "head" => Ok(head()),
+        "head" => Ok(head(args[1..].to_vec())),
         _ => handle.write_all(b"Error: Command not recognized"),
     }
 }
