@@ -1,6 +1,4 @@
-use std::fs::File;
-use std::io::{self, BufRead};
-use std::path::Path;
+use crate::helpers;
 
 #[derive(Debug)]
 pub enum Option {
@@ -75,7 +73,7 @@ pub fn cat(args: Vec<String>) {
 fn concat_files(files: Vec<String>) -> Vec<String> {
     let mut concat_lines: Vec<String> = Vec::from([]);
     for file in files {
-        match read_lines(file) {
+        match helpers::read_lines(file) {
             Ok(lines) => {
                 for line in lines {
                     if let Ok(l) = line {
@@ -87,12 +85,4 @@ fn concat_files(files: Vec<String>) -> Vec<String> {
         }
     }
     concat_lines
-}
-
-fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
-where
-    P: AsRef<Path>,
-{
-    let file = File::open(filename)?;
-    Ok(io::BufReader::new(file).lines())
 }
