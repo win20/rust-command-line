@@ -1,3 +1,5 @@
+use std::process;
+
 pub use crate::helpers;
 
 pub fn head(args: Vec<String>) {
@@ -11,7 +13,13 @@ pub fn head(args: Vec<String>) {
 
     match option {
         Some(_) => {
-            let num_of_lines_to_read: u16 = args[2].parse().unwrap();
+            let num_of_lines_to_read: u16 = match args[2].parse() {
+                Ok(int) => int,
+                Err(e) => {
+                    println!("Error: {}", e);
+                    process::exit(1);
+                }
+            };
             match helpers::read_number_of_lines(file, num_of_lines_to_read) {
                 Ok(lines) => {
                     for line in lines {
