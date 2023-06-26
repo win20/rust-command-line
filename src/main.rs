@@ -6,6 +6,7 @@ pub mod helpers;
 use commands::{cat::cat, echo::echo, head::head, ls::ls};
 
 fn main() -> io::Result<()> {
+    env::set_var("RUST_BACKTRACE", "1");
     let args: Vec<String> = env::args().skip(1).collect();
 
     let stderr = io::stderr();

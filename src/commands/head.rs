@@ -4,38 +4,49 @@ pub use crate::helpers;
 
 pub fn head(args: Vec<String>) {
     let mut option: Option<String> = None;
-    let file = &args[0];
     let default_number_of_lines = 10;
 
-    if args.len() > 1 && args[1].starts_with("-") {
-        option = Some(args[1].clone());
+    let files: Vec<String>;
+    let mut option_index = args.len();
+    for i in 0..args.len() {
+        if args[i].starts_with("-") {
+            option_index = i;
+            option = Some(args[option_index].clone());
+        }
     }
-
+    files = args[0..option_index].to_vec();
     match option {
         Some(_) => {
-            let num_of_lines_to_read: u16 = match args[2].parse() {
-                Ok(int) => int,
+            let num_of_lines_to_read: u16 = match args[option_index + 1].parse::<u16>() {
+                Ok(int) => int - 1,
                 Err(e) => {
                     println!("Error: {}", e);
                     process::exit(1);
                 }
             };
-            match helpers::read_number_of_lines(file, num_of_lines_to_read) {
-                Ok(lines) => {
-                    for line in lines {
-                        println!("{}", &line);
+
+            for file in files {
+                match helpers::read_number_of_lines(&file, num_of_lines_to_read) {
+                    Ok(lines) => {
+                        for line in lines {
+                            println!("{}", &line);
+                        }
                     }
+                    Err(e) => println!("{}", e),
                 }
-                Err(e) => println!("{}", e),
             }
         }
-        None => match helpers::read_number_of_lines(file, default_number_of_lines) {
-            Ok(lines) => {
-                for line in lines {
-                    println!("{}", &line);
+        None => {
+            for file in files {
+                match helpers::read_number_of_lines(&file, default_number_of_lines) {
+                    Ok(lines) => {
+                        for line in lines {
+                            println!("{}", &line);
+                        }
+                    }
+                    Err(e) => println!("Error: {}", e),
                 }
             }
-            Err(e) => println!("Error: {}", e),
-        },
+        }
     }
 }

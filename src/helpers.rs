@@ -15,7 +15,10 @@ pub fn read_number_of_lines(file: &String, num_of_lines: u16) -> io::Result<Vec<
     let mut lines_to_return: Vec<String> = Vec::new();
 
     for _i in 0..=num_of_lines {
-        lines_to_return.push(lines.next().unwrap().unwrap());
+        match lines.next() {
+            Some(line) => lines_to_return.push(line.unwrap()),
+            None => return Ok(lines_to_return),
+        }
     }
 
     Ok(lines_to_return)
