@@ -4,21 +4,17 @@ pub use crate::helpers;
 
 pub fn head(args: Vec<String>) {
     let default_number_of_lines = 10;
-    let files: Vec<String>;
+    let mut files: Vec<String> = args[0..].to_vec();
     let mut option: Option<String> = None;
 
-    let mut option_index = args.len();
-    for i in 0..args.len() {
-        if args[i].starts_with("-") {
-            option_index = i;
-            option = Some(args[option_index].clone());
-        }
+    if args.len() > 0 && args[0].starts_with("-") {
+        option = Some(args[0].clone());
+        files = args[2..].to_vec();
     }
-    files = args[0..option_index].to_vec();
 
     match option {
         Some(_) => {
-            let num_of_lines_to_read: u16 = match args[option_index + 1].parse::<u16>() {
+            let num_of_lines_to_read: u16 = match args[1].parse::<u16>() {
                 Ok(int) => int - 1,
                 Err(e) => {
                     println!("Error: {}", e);
