@@ -61,8 +61,4 @@ pub fn tail(args: Vec<String>) {
             }
         }
     }
-
-    // for line in lines.unwrap().iter().rev() {
-    //     println!("{}", line.as_str());
-    // }
 }
