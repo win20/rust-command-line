@@ -17,26 +17,33 @@ pub fn tail(args: Vec<String>) {
     files = args[0..option_index].to_vec();
 
     match option {
-        Some(_) => {
-            let num_of_lines_to_read: u16 = match args[option_index + 1].parse::<u16>() {
-                Ok(int) => int,
-                Err(e) => {
-                    println!("Error: {}", e);
-                    process::exit(1);
-                }
-            };
+        Some(opt) => {
+            match opt.as_str() {
+                "-n" => {
+                    let num_of_lines_to_read: u16 = match args[option_index + 1].parse::<u16>() {
+                        Ok(int) => int,
+                        Err(e) => {
+                            println!("Error: {}", e);
+                            process::exit(1);
+                        }
+                    };
 
-            for file in files {
-                println!();
-                println!("==> {} <==", file);
-                match helpers::read_number_of_lines_in_reverse(&file, num_of_lines_to_read) {
-                    Ok(lines) => {
-                        for line in lines.iter().rev() {
-                            println!("{}", &line);
+                    for file in files {
+                        println!();
+                        println!("==> {} <==", file);
+                        match helpers::read_number_of_lines_in_reverse(&file, num_of_lines_to_read) {
+                            Ok(lines) => {
+                                for line in lines.iter().rev() {
+                                    println!("{}", &line);
+                                }
+                            }
+                            Err(e) => println!("{}", e),
                         }
                     }
-                    Err(e) => println!("{}", e),
+
                 }
+                _ => println!("Error: Command not found"),
+
             }
         }
         None => {
